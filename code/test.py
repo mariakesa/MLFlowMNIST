@@ -16,22 +16,9 @@ def eval_metrics(actual, pred):
     return rmse, mae, r2
 
 
-def load_data():
-    data_path='/home/maria/Documents/MNISTdata'
-    # Define a transform
-    transform = transforms.Compose([
-                transforms.Resize((28,28)),
-                transforms.Grayscale(),
-                transforms.ToTensor(),
-                transforms.Normalize((0,), (1,))])
-
-    mnist_train = datasets.MNIST(data_path, train=True, download=True, transform=transform)
-
-
-    train_loader = DataLoader(mnist_train, batch_size=batch_size, shuffle=True)
-
 #How to log params
 def make_params():
+    batch_size=128
     # Network Architecture
     num_inputs = 28*28
     num_hidden = 1000
@@ -44,6 +31,24 @@ def make_params():
             'num_hidden':num_hidden, num_steps':num_steps',
             num_outputs':num_outputs', 'beta':beta}
     return params
+
+
+def make_loader(params):
+    data_path='/home/maria/Documents/MNISTdata'
+    # Define a transform
+    transform = transforms.Compose([
+                transforms.Resize((28,28)),
+                transforms.Grayscale(),
+                transforms.ToTensor(),
+                transforms.Normalize((0,), (1,))])
+
+    mnist_train = datasets.MNIST(data_path, train=True, download=True, transform=transform)
+    mnist_test = datasets.MNIST(data_path, train=False, download=True, transform=transform)
+
+    train_loader = DataLoader(mnist_train, batch_size=params['batch_size'], shuffle=True)
+    test_loader = DataLoader(mnist_test, batch_size=params['batch_size'], shuffle=)
+
+    return train_loader
 
 
 # Define Network
